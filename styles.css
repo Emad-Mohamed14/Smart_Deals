@@ -6,7 +6,7 @@ body {
 }
 
 .site-header {
-    background-image: url('img.png'); 
+    background-image: url('imgfol/img.png'); 
     background-size: cover; 
     background-position: center; 
     background-repeat: no-repeat; 
@@ -86,7 +86,7 @@ body {
 }
 
 .background {
-    background-image: url('back.jpg'); 
+    background-image: url('imgfol/back.jpg'); 
     background-size: cover; 
     background-position: center; 
     background-repeat: no-repeat; 
