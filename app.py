@@ -1,12 +1,17 @@
-from flask import Flask, request, redirect, render_template, session, url_for
+from flask import Flask, request, redirect, render_template, session, url_for, flash
 from flask_mysqldb import MySQL
 import os
 import bcrypt
-from werkzeug.security import generate_password_hash, check_password_hash
+from werkzeug.utils import secure_filename
 import logging
 
 app = Flask(__name__)
 app.secret_key = os.urandom(24)
+
+# Configure file upload
+UPLOAD_FOLDER = 'static/uploads'  # Folder to save uploaded product images
+ALLOWED_EXTENSIONS = {'png', 'jpg', 'jpeg', 'gif'}
+app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
 
 logging.basicConfig(filename='check.log',  # Specify the log file
                     level=logging.DEBUG,
@@ -21,6 +26,9 @@ app.config['MYSQL_PASSWORD'] = "tsee12345"
 app.config['MYSQL_DB'] = "smart_deals"
 
 mysql = MySQL(app)
+
+def allowed_file(filename):
+    return '.' in filename and filename.rsplit('.', 1)[1].lower() in ALLOWED_EXTENSIONS
 
 def check_db_connection():
     try:
@@ -95,6 +103,49 @@ def login():
             return "Error occurred", 500
     
     return render_template('login.html')  # Render login form
+
+@app.route('/post_product', methods=['GET', 'POST'])
+def post_product():
+    if 'user_id' not in session:
+        return redirect(url_for('login'))
+
+    if request.method == 'POST':
+        # Get product details from form
+        product_name = request.form['product_name']
+        category = request.form['category']
+        product_description = request.form['product_description']
+        rating = request.form['rating']
+        purchase_date = request.form['purchase_date']
+        cost_price = request.form['cost_price']
+        selling_price = request.form['selling_price']
+
+        # Handle file upload for product image
+        file = request.files['image']
+        if file and allowed_file(file.filename):
+            filename = secure_filename(file.filename)
+            file_path = os.path.join(app.config['UPLOAD_FOLDER'], filename)
+            file.save(file_path)
+        else:
+            flash("Invalid image format. Please upload a PNG, JPG, or GIF file.", "danger")
+            return redirect(url_for('post_product'))
+
+        try:
+            cur = mysql.connection.cursor()
+            # Insert product details into the database
+            cur.execute('INSERT INTO products (product_name, category, product_description, rating, purchase_date, cost_price, selling_price, image_url, owner_id) '
+                        'VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s)',
+                        (product_name, category, product_description, rating, purchase_date, cost_price, selling_price, file_path, session['user_id']))
+            mysql.connection.commit()
+            cur.close()
+            flash('Product posted successfully!', 'success')
+        except Exception as e:
+            app.logger.error(f"Error posting product: {e}")
+            return "Error occurred", 500
+        
+        return redirect(url_for('first_webpage'))
+
+    return render_template('post_product.html')
+
 
 @app.route('/first_webpage')
 def first_webpage():

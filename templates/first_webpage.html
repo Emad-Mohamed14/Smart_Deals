@@ -78,6 +78,20 @@
             color: gray;
         }
         
+        .post-product-btn {
+        font-size: 24px;
+        padding: 10px 20px;
+        background-color: #28a745;
+        color: white;
+        border: none;
+        cursor: pointer;
+        border-radius: 5px;
+        }
+        
+        .post-product-btn:hover {
+            background-color: #218838;
+        }
+        
 /* General container styling for the new section */
 .container {
     max-width: 1200px; /* Same max-width as the Smart Deals section */
@@ -153,6 +167,11 @@
             <input type="text" name="query" class="search-box" placeholder="Search for Products">
         </div>
     </div>
+    <a href="{{ url_for('post_product') }}">
+        <button class="post-product-btn">
+            + Post Product
+        </button>
+    </a>
     <div class="container">
         <div class="category">
             <h2>Fashion <span>&rarr;</span></h2>
