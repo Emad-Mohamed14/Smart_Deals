@@ -6,7 +6,7 @@ body {
 }
 
 .site-header {
-    background-image: url('../static/imgfol/img.png'); 
+    background-image: url('../imgfol/img.png'); 
     background-size: cover; 
     background-position: center; 
     background-repeat: no-repeat; 
@@ -86,7 +86,7 @@ body {
 }
 
 .background {
-    background-image: url('../static/imgfol/back.jpg'); 
+    background-image: url('../imgfol/back.jpg'); 
     background-size: cover; 
     background-position: center; 
     background-repeat: no-repeat; 
@@ -197,4 +197,44 @@ body {
 .wishlist:hover {
     color: white;
     background-color: #f34848;
+}
+
+
+/* User Profile Styles */
+.profile-container {
+    max-width: 600px;
+    margin: 0 auto;
+    padding: 20px;
+    background-color: #ffffff;
+    border-radius: 10px;
+    box-shadow: 0 0 15px rgba(0, 0, 0, 0.2);
+}
+
+.profile-title {
+    text-align: center;
+    color: #333;
+}
+
+.profile-info {
+    margin: 20px 0;
+    font-size: 16px;
+}
+
+.profile-info p {
+    margin: 10px 0;
+}
+
+.back-button {
+    display: inline-block;
+    background-color: #007bff;
+    color: white;
+    padding: 10px 15px;
+    border-radius: 5px;
+    text-decoration: none;
+    text-align: center;
+    margin-top: 20px;
+}
+
+.back-button:hover {
+    background-color: #0056b3;
 }

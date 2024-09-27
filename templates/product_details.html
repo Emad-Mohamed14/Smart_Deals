@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{{ product[1] }} - Smart Deals</title>
+    <link rel="stylesheet" href="../static/CSS/styles.css">
+</head>
+<body>
+    <header class="site-header">
+        <nav class="main-nav">
+            <div class="header">
+                <img src="../static/imgfol/logo.jpg" alt="Smart Deals Logo">
+            </div>
+            <div class="search">
+                <i class="fas fa-search search-icon"></i>
+                <input type="text" name="query" class="search-box" placeholder="Search for Products">
+            </div>
+            <ul>
+                <li><a href="#">Fashion</a></li>
+                <li><a href="#">Electronics</a></li>
+                <li><a href="#">Vehicles</a></li>
+                <li><a href="#">Home Decor</a></li>
+                <li><a href="#">Books</a></li>
+                <li><a href="#">Sports</a></li>
+            </ul>
+        </nav>
+    </header>
+
+    <div class="background">
+        <div class="product-container">
+            <a href="{{ url_for('product_details', product_id=product[0]) }}">
+                <img src="{{ product[4] }}" class="card-img-top" alt="{{ product[1] }}" style="height: 200px; width:200px; object-fit: cover;">
+            </a>
+            <div class="product-details">
+                <h1>{{ product[1] }}</h1>
+                <p>{{ product[2] }}</p>
+                <div class="product-rating">
+                    <span>{{ product[3] }}</span> | <span>{{ product[5] }} &#9733; Rating</span>
+                </div>
+                <div class="product-pricing">
+                    <span class="current-price">₹{{ product[8] }}</span>
+                    <span class="original-price">₹{{ product[7] }}</span>
+                    <p class="tax-info">Inclusive of all taxes</p>
+                </div>
+                <div class="product-actions">
+                    <button class="contact">Contact Owner</button>
+                    <button class="wishlist">Wishlist</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

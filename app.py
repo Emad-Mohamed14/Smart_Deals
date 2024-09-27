@@ -146,29 +146,63 @@ def post_product():
 
     return render_template('post_product.html')
 
+@app.route('/user_profile', methods=['GET'])
+def user_profile():
+    if 'user_id' not in session:
+        return redirect(url_for('login'))
 
-@app.route('/first_webpage')
-def first_webpage():
-    return render_template('first_webpage.html')
+    user_id = session['user_id']
+    
+    # Fetch user information and the count of products from the database
+    cur = mysql.connection.cursor()
+    cur.execute("""
+        SELECT name, gender, age, address, email, username, COUNT(products.id) as product_count 
+        FROM users 
+        LEFT JOIN products ON users.id = products.owner_id 
+        WHERE users.id = %s 
+        GROUP BY users.id
+    """, (user_id,))
+    user_info = cur.fetchone()
+    
+    cur.close()
+    
+    if user_info:
+        name, gender, age, address, email, username, product_count = user_info
+    else:
+        name = gender = age = address = email = username = product_count = None
 
-@app.route('/second')
-def second():
-    return render_template('second.html')
+    return render_template('user_profile.html', 
+                           name=name, 
+                           gender=gender, 
+                           age=age, 
+                           address=address, 
+                           email=email, 
+                           username=username, 
+                           product_count=product_count)
 
-@app.route('/product/<int:product_id>')
+@app.route('/product_details/<int:product_id>')
 def product_details(product_id):
     cur = mysql.connection.cursor()
     cur.execute('SELECT * FROM products WHERE id = %s', (product_id,))
     product = cur.fetchone()
-    
+    cur.close()
+
     if product:
-        cur.execute('SELECT username FROM users WHERE id = %s', (product[5],))  # Get seller info
-        seller = cur.fetchone()
-        return render_template('second.html', product=product, seller=seller)
+        return render_template('product_details.html', product=product)
+    else:
+        return "Product not found", 404
 
-    return "Product not found", 404  # Handle case if product not found
+@app.route('/first_webpage')
+def first_webpage():
+    cur = mysql.connection.cursor()
+    cur.execute("SELECT * FROM products")  # Adjust the query as needed
+    products = cur.fetchall()  # Get all products
+    cur.close()
+    return render_template('first_webpage.html', products=products)
 
-# Add more routes as needed
+@app.route('/second')
+def second():
+    return render_template('second.html')
 
 if __name__ == '__main__':
     app.run(debug=True)
