@@ -100,6 +100,10 @@ def login():
 def first_webpage():
     return render_template('first_webpage.html')
 
+@app.route('/second')
+def second():
+    return render_template('second.html')
+
 @app.route('/product/<int:product_id>')
 def product_details(product_id):
     cur = mysql.connection.cursor()
