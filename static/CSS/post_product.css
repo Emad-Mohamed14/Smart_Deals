@@ -15,7 +15,12 @@ body {
     justify-content: center;
     align-items: center;
     min-height: 100vh;
-    background: linear-gradient(135deg, #cba611 0%, #fcd825 100%);
+    background-image: url('../imgfol/back.jpg');
+    background-size: cover; /* Ensures the image covers the entire background */
+    background-position: center; /* Centers the background image */
+    background-repeat: no-repeat; /* Prevents the image from repeating */
+    margin: 0;
+    padding: 0;
 }
 
 /* Form container with smooth animation */
@@ -37,11 +42,11 @@ form:hover {
 
 /* Headings */
 h2 {
-    text-align: center;
-    color: #444;
+    text-align: justify;
+    color: #fff1c0;
     margin-bottom: 20px;
-    font-size: 28px;
-    font-weight: 600;
+    font-size: 45px;
+    font-weight: 700;
     letter-spacing: 1px;
 }
 

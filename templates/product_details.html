@@ -29,9 +29,9 @@
 
     <div class="background">
         <div class="product-container">
-            <a href="{{ url_for('product_details', product_id=product[0]) }}">
-                <img src="{{ product[4] }}" class="card-img-top" alt="{{ product[1] }}" style="height: 200px; width:200px; object-fit: cover;">
-            </a>
+            <div class="product-image-gallery">
+                <img src="{{ url_for('static', filename=product[4].replace('static/', '').replace('\\', '/')) }}" alt="Image Path: {{ product[4] }}">
+            </div>
             <div class="product-details">
                 <h1>{{ product[1] }}</h1>
                 <p>{{ product[2] }}</p>
