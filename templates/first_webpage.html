@@ -79,13 +79,13 @@
         }
 
         .post-product-btn {
-        font-size: 24px;
-        padding: 10px 20px;
-        background-color: #28a745;
-        color: white;
-        border: none;
-        cursor: pointer;
-        border-radius: 5px;
+            font-size: 24px;
+            padding: 10px 20px;
+            background-color: #28a745;
+            color: white;
+            border: none;
+            cursor: pointer;
+            border-radius: 5px;
         }
         
         .post-product-btn:hover {
@@ -179,6 +179,51 @@
             overflow: hidden;
             text-overflow: ellipsis;
         }
+
+        #my-products-icon {
+            position: absolute;
+            top: 20px;
+            left: 100px; /* Adjust based on your layout */
+            font-size: 20px;
+            color: black;
+            text-align: center;
+        }
+
+        #my-products-icon i {
+            margin-right: 5px;
+        }
+
+        #my-products-icon a {
+            text-decoration: none;
+            color: black;
+        }
+
+        #my-products-icon a:hover {
+            color: #007bff; /* Change color on hover */
+        }
+
+        .logout-container {
+            text-align: right;
+            margin-right: 20px;
+            margin-top: 20px;
+        }
+
+        .logout-button {
+            background-color: #ff4c4c;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            cursor: pointer;
+            font-size: 16px;
+            border-radius: 5px;
+        }
+
+        .logout-button:hover {
+            background-color: #e60000;
+        }
+
+
+
     </style>
 </head>
 <body>
@@ -201,6 +246,20 @@
             <img src="../static/imgfol/profile_icon.jpg" alt="Profile Icon">
         </a>
     </div>
+
+    <div id="my-products-icon">
+        <a href="{{ url_for('my_products') }}">
+            <i class="fas fa-box-open"></i>
+            <span>My Products</span>
+        </a>
+    </div>
+
+    <div class="logout-container">
+        <form action="{{ url_for('logout') }}" method="POST">
+            <button type="submit" class="logout-button">Logout</button>
+        </form>
+    </div>
+    
     <div class="container mt-4">
         <h1>Products</h1>
         <div class="product-container">
@@ -218,8 +277,7 @@
             {% endfor %}
         </div>
     </div>
-    
-    
+
     <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.3/dist/umd/popper.min.js"></script>
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>

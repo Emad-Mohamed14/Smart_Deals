@@ -180,11 +180,27 @@ def user_profile():
                            username=username, 
                            product_count=product_count)
 
-@app.route('/product_details/<int:product_id>')
+@app.route('/product_details/<int:product_id>', methods=['GET', 'POST'])
 def product_details(product_id):
     cur = mysql.connection.cursor()
     cur.execute('SELECT * FROM products WHERE id = %s', (product_id,))
     product = cur.fetchone()
+
+    if request.method == 'POST':
+        if 'user_id' in session:
+            # Log the interest from the user
+            interested_user_id = session['user_id']
+            product_owner_id = product[10]  # Assuming index 8 is owner_id
+            cur.execute('INSERT INTO interested_users (product_id, interested_user_id) VALUES (%s, %s)', (product_id, interested_user_id))
+            mysql.connection.commit()
+            # Assuming you simply want to log this in the console or handle it as needed
+            logging.info(f"User {interested_user_id} is interested in product {product_id} owned by {product_owner_id}.")
+            flash("Your interest has been noted!", "success")
+        else:
+            flash("You need to be logged in to contact the owner.", "warning")
+
+        return redirect(url_for('first_webpage'))
+
     cur.close()
 
     if product:
@@ -192,17 +208,56 @@ def product_details(product_id):
     else:
         return "Product not found", 404
 
-@app.route('/first_webpage')
+@app.route('/my_products')
+def my_products():
+    if 'user_id' not in session:
+        return redirect(url_for('login'))
+
+    user_id = session['user_id']
+
+    try:
+        # Query to get products posted by the logged-in user
+        cur = mysql.connection.cursor()
+        cur.execute('SELECT * FROM products WHERE owner_id = %s', (user_id,))
+        user_products = cur.fetchall()
+
+        interested_users = {}
+        
+        for product in user_products:
+            product_id = product[0]  # Assuming index 0 is the product ID
+            # Fetch users interested in this product (for demonstration, just log their IDs)
+            cur.execute("""
+                SELECT users.username, users.email
+                FROM users 
+                INNER JOIN interested_users 
+                ON users.id = interested_users.interested_user_id
+                WHERE interested_users.product_id = %s
+            """, (product_id,))
+            interested_users[product_id] = cur.fetchall()
+
+        cur.close()
+
+        return render_template('my_products.html', products=user_products, interested_users=interested_users)
+
+    except Exception as e:
+        logging.error(f"Error fetching products: {e}")
+        return "Error occurred", 500
+
+@app.route('/logout', methods=['POST'])
+def logout():
+    session.pop('user_id', None)  # Clear session
+    redirect(url_for('login'))  # Redirect to login page
+
+
+@app.route('/first_webpage', methods=['GET', 'POST'])
 def first_webpage():
+    if 'user_id' not in session:  # Check if user is not logged in
+        return redirect(url_for('login'))
     cur = mysql.connection.cursor()
     cur.execute("SELECT * FROM products")  # Adjust the query as needed
     products = cur.fetchall()  # Get all products
     cur.close()
     return render_template('first_webpage.html', products=products)
-
-@app.route('/second')
-def second():
-    return render_template('second.html')
 
 if __name__ == '__main__':
     app.run(debug=True)

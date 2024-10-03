@@ -44,7 +44,10 @@
                     <p class="tax-info">Inclusive of all taxes</p>
                 </div>
                 <div class="product-actions">
-                    <button class="contact">Contact Owner</button>
+                    <form id="contact-owner-form" action="{{ url_for('first_webpage') }}" method="POST">
+                        <input type="hidden" name="product_id" value="{{ product[0] }}">
+                        <button type="submit" class="contact-button">Contact Owner</button>
+                    </form>
                     <button class="wishlist">Wishlist</button>
                 </div>
             </div>
